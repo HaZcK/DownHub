@@ -36,23 +36,32 @@ local Tab = Window:Tab({
 
 Tab:Select() -- Select Tabi
 
--- Variabel penampung
 local autoTpEnabled = false
-local tpThreshold = 10 -- Nilai default jika belum diinput
+local tpThreshold = 10 
 
--- 1. FUNGSI TELEPORT (ANTI TEMBUS)
+-- ==========================================
+-- 1. FUNGSI TELEPORT AMAN
+-- ==========================================
 local function doSafeTeleport()
-    local target = workspace.Game.Plots.KHAFIDZKTP.SpawnLocation
+    -- Menggunakan FindFirstChild agar script tidak langsung error/mati kalau plotnya telat load
+    local gameFolder = workspace:FindFirstChild("Game")
+    local plotsFolder = gameFolder and gameFolder:FindFirstChild("Plots")
+    local myPlot = plotsFolder and plotsFolder:FindFirstChild("KHAFIDZKTP")
+    local target = myPlot and myPlot:FindFirstChild("SpawnLocation")
+    
     local character = player.Character
     
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        -- Gunakan Vector3(0, 10, 0) agar muncul dari langit-langit spawn
+    if target and character and character:FindFirstChild("HumanoidRootPart") then
         character:PivotTo(target.CFrame + Vector3.new(0, 10, 0))
-        print("Auto Teleport Aktif: Menghindari tembus bawah!")
+        print("✅ Auto TP Berhasil! Oksigen kritis, balik ke base.")
+    else
+        warn("❌ Gagal TP: Karakter atau SpawnLocation KHAFIDZKTP tidak ditemukan!")
     end
 end
 
--- 2. INPUT (Setting Persentase)
+-- ==========================================
+-- 2. SETUP UI WINDUI
+-- ==========================================
 local Input = Tab:Input({
     Title = "Oxygen % Threshold",
     Desc = "Teleport saat oksigen di bawah angka ini",
@@ -61,51 +70,66 @@ local Input = Tab:Input({
     Type = "Input",
     Placeholder = "Masukkan angka (misal: 6)",
     Callback = function(input) 
-        local num = tonumber(input)
+        -- Memastikan input dibersihkan dari huruf/spasi, murni ambil angkanya saja
+        local cleanInput = string.match(input, "%d+")
+        local num = tonumber(cleanInput)
+        
         if num then
             tpThreshold = num
-            print("Threshold diset ke: " .. tpThreshold .. "%")
+            print("⚙️ Batas Oksigen diubah menjadi: " .. tpThreshold .. "%")
+        else
+            warn("⚠️ Input tidak valid! Tolong masukkan angka.")
         end
     end
 })
 
--- 3. TOGGLE (Aktifkan Fitur)
 local Toggle = Tab:Toggle({
     Title = "Auto Teleport Oxygen",
-    Desc = "Otomatis balik ke Plot saat sesak napas",
+    Desc = "Otomatis balik ke Plot saat oksigen menipis",
     Icon = "locate",
     Type = "Checkbox",
     Value = false,
     Callback = function(state) 
         autoTpEnabled = state
-        print("Auto TP Status: " .. tostring(state))
+        print("🔄 Auto TP Oksigen: " .. (state and "MENYALA" or "MATI"))
     end
 })
 
--- 4. MONITORING LOOP (Tetap berjalan di background)
+-- ==========================================
+-- 3. BACKGROUND LOOP (Pendeteksi Oksigen)
+-- ==========================================
 task.spawn(function()
     while true do
         if autoTpEnabled then
-            -- Path sesuai info: PersistentUI.OxygenBar
-            local oxygenBar = pGui:FindFirstChild("PersistentUI") and pGui.PersistentUI:FindFirstChild("OxygenBar")
-            local amountLabel = oxygenBar and oxygenBar.OxygenBar:FindFirstChild("Amount")
+            -- Mencari UI Oksigen dengan aman
+            local persistentUI = pGui:FindFirstChild("PersistentUI")
+            local oxygenBar1 = persistentUI and persistentUI:FindFirstChild("OxygenBar")
+            local oxygenBar2 = oxygenBar1 and oxygenBar1:FindFirstChild("OxygenBar")
+            local amountLabel = oxygenBar2 and oxygenBar2:FindFirstChild("Amount")
             
             if amountLabel then
-                -- Ambil angka saja dari text "Oxygen: 100%"
-                local currentVal = tonumber(amountLabel.Text:match("%d+"))
+                -- Menarik angka dari teks UI (misal: "Oxygen: 100%" -> jadi 100)
+                local currentVal = tonumber(string.match(amountLabel.Text, "%d+"))
                 
-                if currentVal and currentVal <= tpThreshold then
-                    doSafeTeleport()
+                if currentVal then
+                    -- Matikan tanda kutip di bawah ini kalau kamu mau lihat log pembacaan oksigen di F9
+                    -- print("🔍 Info Oksigen: Saat ini " .. currentVal .. "% | Batas TP: " .. tpThreshold .. "%")
                     
-                    -- Jeda 5 detik supaya tidak teleport terus-menerus dalam satu waktu
-                    task.wait(5)
+                    if currentVal <= tpThreshold then
+                        doSafeTeleport()
+                        task.wait(5) -- Berhenti sejenak selama 5 detik setelah TP agar tidak spam
+                    end
+                else
+                    warn("❌ Script tidak bisa membaca angka dari teks: " .. tostring(amountLabel.Text))
                 end
+            else
+                -- Jika UI belum muncul di layar
+                -- warn("⏳ Menunggu UI Oksigen muncul...")
             end
         end
-        task.wait(1) -- Cek setiap detik biar hemat performa
+        task.wait(1) -- Cek setiap 1 detik
     end
 end)
-
 
 -- Variabel penyimpan data
 local selectedFish = ""
