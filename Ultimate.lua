@@ -68,6 +68,7 @@ local Input = Tab:Input({
     Value = "10",
     InputIcon = "wind",
     Type = "Input",
+    Locked = True,
     Placeholder = "Masukkan angka (misal: 6)",
     Callback = function(input) 
         -- Memastikan input dibersihkan dari huruf/spasi, murni ambil angkanya saja
@@ -89,6 +90,7 @@ local Toggle = Tab:Toggle({
     Icon = "locate",
     Type = "Checkbox",
     Value = false,
+    Locked = True,
     Callback = function(state) 
         autoTpEnabled = state
         print("🔄 Auto TP Oksigen: " .. (state and "MENYALA" or "MATI"))
