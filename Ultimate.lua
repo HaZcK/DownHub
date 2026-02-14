@@ -1,4 +1,6 @@
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local player = game.Players.LocalPlayer
+local pGui = player:WaitForChild("PlayerGui")
 
 local Window = WindUI:CreateWindow({
     Title = "DownHub",
@@ -22,21 +24,6 @@ local Window = WindUI:CreateWindow({
             print("Hi!")
         end,
     },
-    
-    --       remove this all, 
-    -- !  ↓  if you DON'T need the key system
-    KeySystem = { 
-        -- ↓ Optional. You can remove it.
-        Key = { "Hafidz", "Khafidz", "Hafiz"},
-        
-        Note = "Nama Aku Apa?",
-        
-        -- ↓ Optional. You can remove it.
-        SaveKey = false, -- automatically save and load the key.
-        
-        -- ↓ Optional. You can remove it.
-        -- API = {} ← Services. Read about it below ↓
-    },
 })
 
 local Tab = Window:Tab({
@@ -45,10 +32,7 @@ local Tab = Window:Tab({
     Locked = false,
 })
 
-Tab:Select() -- Select Tab
-
-local player = game.Players.LocalPlayer
-local pGui = player:WaitForChild("PlayerGui")
+Tab:Select() -- Select Tabi
 
 -- Variabel penampung
 local autoTpEnabled = false
