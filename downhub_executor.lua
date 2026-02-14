@@ -429,70 +429,7 @@ AnimateButton(OxygenToggle)
 AnimateButton(RefreshBtn, Color3.fromRGB(120, 170, 255))
 AnimateButton(FarmToggle)
 
--- Loading Screen
-local LoadingScreen = Instance.new("Frame")
-LoadingScreen.Size = UDim2.new(1, 0, 1, 0)
-LoadingScreen.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
-LoadingScreen.BorderSizePixel = 0
-LoadingScreen.ZIndex = 20
-LoadingScreen.Parent = MainFrame
-
-local LoadingCorner = Instance.new("UICorner")
-LoadingCorner.CornerRadius = UDim.new(0, 15)
-LoadingCorner.Parent = LoadingScreen
-
-local LoadingTitle = Instance.new("TextLabel")
-LoadingTitle.Size = UDim2.new(0, 350, 0, 60)
-LoadingTitle.Position = UDim2.new(0.5, -175, 0.5, -80)
-LoadingTitle.BackgroundTransparency = 1
-LoadingTitle.Text = "🐟 DownHub Executor"
-LoadingTitle.TextColor3 = Color3.fromRGB(100, 180, 255)
-LoadingTitle.TextSize = 26
-LoadingTitle.Font = Enum.Font.GothamBold
-LoadingTitle.Parent = LoadingScreen
-
-local LoadingCredit = Instance.new("TextLabel")
-LoadingCredit.Size = UDim2.new(0, 300, 0, 40)
-LoadingCredit.Position = UDim2.new(0.5, -150, 0.5, -20)
-LoadingCredit.BackgroundTransparency = 1
-LoadingCredit.Text = "By: KHAFIDZKTP"
-LoadingCredit.TextColor3 = Color3.fromRGB(150, 100, 255)
-LoadingCredit.TextSize = 16
-LoadingCredit.Font = Enum.Font.GothamBold
-LoadingCredit.Parent = LoadingScreen
-
-local LoadingSpinner = Instance.new("ImageLabel")
-LoadingSpinner.Size = UDim2.new(0, 70, 0, 70)
-LoadingSpinner.Position = UDim2.new(0.5, -35, 0.5, 40)
-LoadingSpinner.BackgroundTransparency = 1
-LoadingSpinner.Image = "rbxassetid://4965945816"
-LoadingSpinner.ImageColor3 = Color3.fromRGB(100, 150, 255)
-LoadingSpinner.Parent = LoadingScreen
-
-TweenService:Create(LoadingSpinner, TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), {
-    Rotation = 360
-}):Play()
-
-local ProgressBar = Instance.new("Frame")
-ProgressBar.Size = UDim2.new(0, 320, 0, 5)
-ProgressBar.Position = UDim2.new(0.5, -160, 0.5, 130)
-ProgressBar.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
-ProgressBar.BorderSizePixel = 0
-ProgressBar.Parent = LoadingScreen
-
-local ProgressBarCorner = Instance.new("UICorner")
-ProgressBarCorner.CornerRadius = UDim.new(1, 0)
-ProgressBarCorner.Parent = ProgressBar
-
-local ProgressFill = Instance.new("Frame")
-ProgressFill.Size = UDim2.new(0, 0, 1, 0)
-ProgressFill.BackgroundColor3 = Color3.fromRGB(100, 180, 255)
-ProgressFill.BorderSizePixel = 0
-ProgressFill.Parent = ProgressBar
-
-local ProgressFillCorner = Instance.new("UICorner")
-ProgressFillCorner.CornerRadius = UDim.new(1, 0)
-ProgressFillCorner.Parent = ProgressFill
+-- No loading screen, just opening animation
 
 -- ==========================================
 -- FUNCTIONS
@@ -781,31 +718,17 @@ task.spawn(function()
     end
 end)
 
--- Loading Animation
+-- Opening Animation Only
 spawn(function()
-    for i = 0, 100, 2 do
-        ProgressFill.Size = UDim2.new(i/100, 0, 1, 0)
-        wait(0.03)
-    end
-    wait(0.5)
-    
-    for _, v in pairs(LoadingScreen:GetDescendants()) do
-        if v:IsA("GuiObject") then
-            TweenService:Create(v, TweenInfo.new(0.5), {
-                BackgroundTransparency = 1,
-                TextTransparency = 1,
-                ImageTransparency = 1
-            }):Play()
-        end
-    end
-    wait(0.5)
-    LoadingScreen:Destroy()
-    
+    -- Start from zero size
     MainFrame.Size = UDim2.new(0, 0, 0, 0)
+    
+    -- Animate to full size
     TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
         Size = originalSize
     }):Play()
     
+    wait(0.7)
     ShowNotification("🎉 DownHub Executor siap!\nBy: KHAFIDZKTP", 3, Color3.fromRGB(100, 180, 255))
 end)
 
