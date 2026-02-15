@@ -2,7 +2,9 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 local player = game.Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 local fishesFolder = workspace:WaitForChild("Game"):WaitForChild("Fishes")
-local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild("KHAFIDZKTP"):WaitForChild("SpawnLocation")
+local player = game.Players.LocalPlayer
+local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild(player.Name):WaitForChild("SpawnLocation")
+
 
 local Window = WindUI:CreateWindow({
     Title = "DownHub",
