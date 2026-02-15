@@ -6,7 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 local player = game.Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 local fishesFolder = workspace:WaitForChild("Game"):WaitForChild("Fishes")
-local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild("KHAFIDZKTP"):WaitForChild("SpawnLocation")
+local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild("zeros7299"):WaitForChild("SpawnLocation")
 
 -- Variables
 local selectedFish = ""
