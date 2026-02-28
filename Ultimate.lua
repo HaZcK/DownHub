@@ -3,7 +3,7 @@ local player = game.Players.LocalPlayer
 local pGui = player:WaitForChild("PlayerGui")
 local fishesFolder = workspace:WaitForChild("Game"):WaitForChild("Fishes")
 local player = game.Players.LocalPlayer
-local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild(player.Name):WaitForChild("SpawnLocation")
+local spawnLocation = workspace:WaitForChild("Game"):WaitForChild("Plots"):WaitForChild("KHAFIDZKTP"):WaitForChild("SpawnLocation")
 
 
 local Window = WindUI:CreateWindow({
